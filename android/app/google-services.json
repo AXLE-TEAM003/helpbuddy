@@ -1,0 +1,118 @@
+{
+  "project_info": {
+    "project_number": "443273042691",
+    "project_id": "helpbuddy-79264",
+    "storage_bucket": "helpbuddy-79264.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:443273042691:android:3c630fdbfeff2465286736",
+        "android_client_info": {
+          "package_name": "com.android.application"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "443273042691-d0ok8turecpcrjqajcotaobac9fftg1e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQV8vMrvXEBg5y415NWcsmA_VFHEziej8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "443273042691-d0ok8turecpcrjqajcotaobac9fftg1e.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "443273042691-rujvd7kohlg2k1dhv2vf1sc07h1ugmvo.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.umar.app"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:443273042691:android:08c7b942d06329ef286736",
+        "android_client_info": {
+          "package_name": "com.example.helpbuddy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "443273042691-d0ok8turecpcrjqajcotaobac9fftg1e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQV8vMrvXEBg5y415NWcsmA_VFHEziej8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "443273042691-d0ok8turecpcrjqajcotaobac9fftg1e.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "443273042691-rujvd7kohlg2k1dhv2vf1sc07h1ugmvo.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.umar.app"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:443273042691:android:a96f090fa391c830286736",
+        "android_client_info": {
+          "package_name": "com.umar.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "443273042691-d0ok8turecpcrjqajcotaobac9fftg1e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQV8vMrvXEBg5y415NWcsmA_VFHEziej8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "443273042691-d0ok8turecpcrjqajcotaobac9fftg1e.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "443273042691-rujvd7kohlg2k1dhv2vf1sc07h1ugmvo.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.umar.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

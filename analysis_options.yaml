@@ -1,0 +1,21 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  strong-mode:
+   # implicit-casts: false
+   # implicit-dynamic: false
+   
+
+linter:
+  rules:
+    - always_declare_return_types
+   
+    - avoid_init_to_null
+    - avoid_return_types_on_setters
+    - avoid_void_async
+    - hash_and_equals
+    - prefer_constructors_over_static_methods
+    - prefer_single_quotes
+    - sort_constructors_first
+    - avoid_annotating_with_dynamic
+    
