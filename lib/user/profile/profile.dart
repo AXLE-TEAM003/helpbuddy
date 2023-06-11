@@ -1,54 +1,48 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:helpbuddy/user/chat/models/user_model.dart';
-import 'package:helpbuddy/user/state/user_state.dart';
 import 'package:helpbuddy/utils/constant/theme.dart';
 import 'package:helpbuddy/widget/button.dart';
 import 'package:helpbuddy/widget/input/outlineInput.dart';
-import 'package:helpbuddy/widget/loading.dart';
 
-import 'package:provider/provider.dart';
+import '../../mymodels/myusermodels.dart';
 
-class Profile extends StatefulWidget {
-  const Profile({Key? key}) : super(key: key);
+class UserProfile extends StatefulWidget {
+  const UserProfile({Key? key, required this.userInfo}) : super(key: key);
+
+  final UserInfo userInfo;
 
   @override
-  _ProfileState createState() => _ProfileState();
+  UserProfileState createState() => UserProfileState();
 }
 
-class _ProfileState extends State<Profile> {
+class UserProfileState extends State<UserProfile> {
   TextEditingController? emailController;
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   bool loginPasswordVisibility = false;
 
-  final bool _value = false;
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
-
-  TextEditingController? fullNameController;
+  TextEditingController? firstNameController;
   TextEditingController? lastNameController;
   TextEditingController? phoneController;
   TextEditingController? nationalityController;
   TextEditingController? genderController;
   TextEditingController? passwordController;
 
-  UserModel? userModel;
-
   @override
   void initState() {
-    UserState userState = Provider.of<UserState>(context, listen: false);
-    userModel = userState.userDetails;
-    debugPrint(userModel!.nationality);
     super.initState();
-    emailController = TextEditingController(text: userModel?.userEmail);
+    emailController = TextEditingController(text: widget.userInfo.info.email);
 
-    fullNameController = TextEditingController(text: userModel!.userName);
-    lastNameController = TextEditingController();
-    phoneController = TextEditingController(text: userModel?.phoneNumber);
-    nationalityController = TextEditingController(text: userModel?.nationality);
-    genderController = TextEditingController(text: userModel?.gender);
+    firstNameController =
+        TextEditingController(text: widget.userInfo.info.firstName);
+    lastNameController =
+        TextEditingController(text: widget.userInfo.info.lastName);
+    phoneController =
+        TextEditingController(text: widget.userInfo.info.phoneNumber);
+    nationalityController =
+        TextEditingController(text: widget.userInfo.info.nationality);
+    genderController = TextEditingController(text: widget.userInfo.info.gender);
     passwordController = TextEditingController();
   }
 
@@ -88,18 +82,20 @@ class _ProfileState extends State<Profile> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                      alignment: Alignment.center,
-                      width: 120,
-                      height: 120,
-                      clipBehavior: Clip.antiAlias,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                      ),
-                      child: Image.network(
-                        'https://picsum.photos/seed/205/600',
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+                        alignment: Alignment.center,
+                        width: 120,
+                        height: 120,
+                        clipBehavior: Clip.antiAlias,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                        ),
+                        child: const CircleAvatar(
+                          radius: 40,
+                          child: Icon(
+                            Icons.person,
+                            size: 50,
+                          ),
+                        )),
                   ],
                 ),
                 const SizedBox(
@@ -117,7 +113,7 @@ class _ProfileState extends State<Profile> {
                   height: 10,
                 ),
                 BlackOutlineInput(
-                  controller: fullNameController,
+                  controller: firstNameController,
                 ),
                 const SizedBox(
                   height: 20,
@@ -169,6 +165,9 @@ class _ProfileState extends State<Profile> {
                 ),
                 BlackOutlineInput(
                   controller: emailController,
+                  onTap: () {
+                    FocusScope.of(context).requestFocus(FocusNode());
+                  },
                 ),
                 const SizedBox(
                   height: 20,
@@ -315,76 +314,12 @@ class _ProfileState extends State<Profile> {
                 const SizedBox(
                   height: 20,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text('Password',
-                        textAlign: TextAlign.start,
-                        style: ConstantTheme().defaultStyle),
-                  ],
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                TextFormField(
-                    validator: (String? amountController) {
-                      if (amountController!.isEmpty) {
-                        return 'Password box is Empty';
-                      }
-                      return null;
-                    },
-                    controller: passwordController,
-                    obscureText: !loginPasswordVisibility,
-                    decoration: InputDecoration(
-                      enabledBorder: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(12)),
-                        borderSide: BorderSide(
-                          color: Color(0xffC4C4C5),
-                        ),
-                      ),
-                      focusedBorder: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(12)),
-                        borderSide: BorderSide(
-                          color: Color(0xffC4C4C5),
-                        ),
-                      ),
-                      errorBorder: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(12)),
-                        borderSide: BorderSide(
-                          color: Color(0xffC4C4C5),
-                        ),
-                      ),
-                      focusedErrorBorder: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(12)),
-                        borderSide: BorderSide(
-                          color: Color(0xffC4C4C5),
-                        ),
-                      ),
-                      suffixIcon: InkWell(
-                        onTap: () => setState(
-                          () => loginPasswordVisibility =
-                              !loginPasswordVisibility,
-                        ),
-                        child: Icon(
-                          loginPasswordVisibility
-                              ? Icons.visibility_outlined
-                              : Icons.visibility_off_outlined,
-                          color: Colors.black,
-                          size: 22,
-                        ),
-                      ),
-                    )),
-                const SizedBox(
-                  height: 30,
-                ),
                 const SizedBox(
                   height: 30,
                 ),
                 Button(
                   text: 'Complete',
-                  onTap: () {
-                   
-                  },
+                  onTap: () {},
                 )
               ],
             ),
@@ -393,23 +328,4 @@ class _ProfileState extends State<Profile> {
       ),
     );
   }
-
-  //   void Resendpin() async {
-  //   Loading(context);
-  //   HttpRequest('/email-verification',
-  //   shouldPopOnError: false,
-  //       context: context,
-  //       body: {'email': widget.email}, onSuccess: (_, result) {
-  //     Navigator.pop(context);
-  //     successfulshowSnackbar(context, 'Sent');
-  //   }, onFailure: (_, result) {
-  //     Navigator.pop(context);
-  //     showSnackbar(context, result['message']);
-  //     return null;
-  //   }, headers: {
-  //     'Content-Type': 'application/json',
-  //     'Accept': 'application/json',
-  //     'Authorization': 'Bearer ${token.toString()}'
-  //   }).send();
-  // }
 }

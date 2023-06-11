@@ -1,17 +1,38 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:helpbuddy/widget/button.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+
+import '../../api_client/api_client.dart';
+import '../../mymodels/myusermodels.dart';
 
 class RequestHistory extends StatefulWidget {
-  const RequestHistory({Key? key}) : super(key: key);
+  const RequestHistory({Key? key, required this.token}) : super(key: key);
+  final String token;
 
   @override
   State<RequestHistory> createState() => _RequestHistoryState();
 }
 
 class _RequestHistoryState extends State<RequestHistory> {
+  List<Project> projectsList = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchProjects(widget.token).then((response) {
+      setState(() {
+        projectsList = response.map((json) => Project.fromJson(json)).toList();
+        isLoading = false;
+      });
+    }).catchError((error) {
+      setState(() {
+        isLoading = false;
+      });
+      // Handle the error here, e.g., show an error message
+      print('Error fetching projects: $error');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,207 +48,210 @@ class _RequestHistoryState extends State<RequestHistory> {
               size: 16,
             ),
           ),
-          title: Text('Request History',
+          title: Text('History',
               style: GoogleFonts.urbanist(
                   fontWeight: FontWeight.w700,
-                  fontSize: 14,
+                  fontSize: 18,
                   color: Colors.black)),
           centerTitle: true,
+          elevation: 0,
         ),
-        body: StreamBuilder(
-            stream: FirebaseFirestore.instance
-                .collection('project')
-                .where('taken', isEqualTo: false)
-                .snapshots(),
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else {
-                if (snapshot.hasData) {
-                  QuerySnapshot querySnapshot = snapshot.data as QuerySnapshot;
-                  print(querySnapshot.docs.length);
-                  return ListView.builder(
-                      itemCount: querySnapshot.docs.length,
-                      itemBuilder: (BuildContext context, int int) {
-                        return RequestCard(data: querySnapshot.docs[int]);
-                      });
-                } else if (snapshot.hasError) {
-                  return Text(snapshot.error.toString());
-                } else {
-                  return const Center(
-                    child: Text('No Project'),
-                  );
-                }
-              }
-            }));
-  }
-
-  void bottomModal(BuildContext context) {
-    showModalBottomSheet(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(40.0),
-      ),
-      context: context,
-      builder: (BuildContext context) {
-        return Container(
-            height: 300,
-            decoration: const BoxDecoration(
+        body: Column(
+          children: [
+            Container(
               color: Colors.white,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(40),
-                topRight: Radius.circular(40),
-              ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.only(left: 30, top: 12, right: 12),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
-                    children: const [Icon(MdiIcons.cancel)],
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Your Total Balance : ',
+                      Text('Any status',
                           style: GoogleFonts.urbanist(
                               fontWeight: FontWeight.w600,
                               fontSize: 14,
-                              color: Colors.black)),
+                              color: Color.fromARGB(255, 104, 104, 104))),
                       const SizedBox(
-                        height: 5,
+                        width: 2,
                       ),
-                      Text('74343',
-                          style: GoogleFonts.urbanist(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 23,
-                              color: Colors.black)),
+                      const Icon(Icons.arrow_drop_down),
+                      const SizedBox(
+                        width: 12,
+                      ),
                     ],
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                ],
+              ),
+            ),
+            Expanded(
+                child: Padding(
+              padding: EdgeInsets.all(10),
+              child: Column(
+                children: [
+                  Row(
                     children: [
-                      Text('Your Total Balance : ',
+                      Text('31/12/2022 - 01/03/2023',
                           style: GoogleFonts.urbanist(
                               fontWeight: FontWeight.w600,
                               fontSize: 14,
-                              color: Colors.black)),
+                              color: Color.fromARGB(255, 0, 0, 0))),
                       const SizedBox(
-                        height: 5,
+                        width: 2,
                       ),
-                      Text('74343',
-                          style: GoogleFonts.urbanist(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 23,
-                              color: Colors.black)),
+                      const Icon(Icons.arrow_drop_down),
+                      const SizedBox(
+                        width: 12,
+                      ),
                     ],
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Amount Deposited : ',
-                          style: GoogleFonts.urbanist(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14,
-                              color: Colors.black)),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Text('Referral Bouns',
-                          style: GoogleFonts.urbanist(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 23,
-                              color: Colors.black)),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 30,
+                  SizedBox(
+                    height: 4,
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      SizedBox(
-                          width: 100,
-                          child: Button(
-                            text: 'Withdarw balance ',
-                            height: 20,
-                          )),
-                      // Container(
-                      //   width: 100,
-
-                      //   child: BlackButton(text: 'View History'))
+                      Text('In: ',
+                          style: GoogleFonts.urbanist(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 14,
+                              color: Color.fromARGB(255, 0, 0, 0))),
+                      Text('£240,000.10',
+                          style: GoogleFonts.urbanist(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                              color: Color.fromARGB(255, 102, 102, 102))),
+                      Expanded(child: Container()),
+                      Text('Out: ',
+                          style: GoogleFonts.urbanist(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 14,
+                              color: Color.fromARGB(255, 0, 0, 0))),
+                      Text('£240,000.10',
+                          style: GoogleFonts.urbanist(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                              color: Color.fromARGB(255, 102, 102, 102))),
                     ],
+                  ),
+                  Expanded(
+                    child: isLoading
+                        ? const Center(child: CircularProgressIndicator())
+                        : projectsList.isEmpty
+                            ? const Center(
+                                child: Text('No projects found'),
+                              )
+                            : ListView.builder(
+                                padding: const EdgeInsets.only(top: 20),
+                                itemCount: projectsList.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return RequestCard(
+                                    item: projectsList[index],
+                                    token: widget.token,
+                                  );
+                                },
+                              ),
                   )
                 ],
               ),
-            ));
-      },
-    );
+            )),
+          ],
+        ));
   }
 }
 
 class RequestCard extends StatelessWidget {
- RequestCard({Key? key, this.data})
+  const RequestCard({Key? key, required this.item, required this.token})
       : super(key: key);
-  QueryDocumentSnapshot<Object?>? data;
+  final Project item;
+  final String token;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 20, top: 5, bottom: 5),
-      child: SizedBox(
-        height: 90,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Container(width: 5, height: 90, color: Colors.green),
-                const SizedBox(width: 10),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(data!['userEmail'],
-                        style: GoogleFonts.urbanist(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14,
-                            color: Colors.black)),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Text('Request History',
-                        style: GoogleFonts.urbanist(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 12,
-                            color: const Color(0xff686868))),
-                  ],
-                )
-              ],
-            ),
-            Container(
-              decoration: const BoxDecoration(color: Color(0xffD9FFEF)),
-              child: Padding(
-                padding: const EdgeInsets.all(5.0),
-                child: Text('Complete',
-                    style: GoogleFonts.urbanist(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14,
-                        color: const Color(0xff006C3F))),
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Color.fromARGB(255, 243, 243, 243),
+            blurRadius: 2,
+            offset: Offset(0.0, 2.0),
+          ),
+        ],
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Icon(Icons.arrow_drop_down),
+          Image.asset(
+            "assets/images/Twgo 1.png",
+            width: 50,
+            height: 50,
+          ),
+          SizedBox(
+            width: 2,
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('You started a project',
+                  style: GoogleFonts.urbanist(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 13,
+                      color: Colors.black)),
+              const SizedBox(
+                height: 2,
               ),
-            ),
-          ],
-        ),
+              Text('Budget',
+                  style: GoogleFonts.urbanist(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 11.5,
+                      color: Color.fromARGB(255, 141, 141, 141))),
+              const SizedBox(
+                height: 2,
+              ),
+              Text('Status',
+                  style: GoogleFonts.urbanist(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                      color: const Color(0xff686868))),
+            ],
+          ),
+          Expanded(child: Container()),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(item.deliveryDate,
+                  style: GoogleFonts.urbanist(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                      color: const Color(0xff006C3F))),
+              const SizedBox(
+                height: 2,
+              ),
+              Text(item.serviceType,
+                  style: GoogleFonts.urbanist(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 12,
+                      color: Color.fromARGB(255, 102, 102, 102))),
+              const SizedBox(
+                height: 2,
+              ),
+              Text(
+                  item.status.substring(0, 1).toUpperCase() +
+                      item.status.substring(1),
+                  style: GoogleFonts.urbanist(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 12,
+                      color: Color.fromARGB(255, 0, 199, 50))),
+            ],
+          ),
+        ],
       ),
     );
   }
+}
+
+Future<List<dynamic>> fetchProjects(String token) async {
+  final response = await ApiClient(authToken: token).get('projects/admin');
+  return response;
 }

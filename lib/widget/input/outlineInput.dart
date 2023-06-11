@@ -83,7 +83,7 @@ class _BlackOutlineInputState extends State<BlackOutlineInput> {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: widget.controller,
-      autofocus: true,
+      // autofocus: true,
       onTap: widget.onTap,
       obscureText: false,
 

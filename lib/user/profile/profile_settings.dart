@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:helpbuddy/user/profile/profile.dart';
 import 'package:helpbuddy/user/profile/transaction_pin.dart';
-import 'package:helpbuddy/user/state/user_state.dart';
 import 'package:helpbuddy/utils/constant/theme.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:provider/provider.dart';
+
+import '../../mymodels/myusermodels.dart';
 
 class ProjectSettings extends StatefulWidget {
-  const ProjectSettings({Key? key}) : super(key: key);
+  const ProjectSettings({Key? key, required this.userInfo}) : super(key: key);
+
+  final UserInfo userInfo;
 
   @override
   State<ProjectSettings> createState() => _ProjectSettingsState();
@@ -17,7 +19,6 @@ class ProjectSettings extends StatefulWidget {
 class _ProjectSettingsState extends State<ProjectSettings> {
   @override
   Widget build(BuildContext context) {
-    UserState state = Provider.of<UserState>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -43,19 +44,18 @@ class _ProjectSettingsState extends State<ProjectSettings> {
         children: [
           ClipRRect(
               borderRadius: BorderRadius.circular(20),
-              child: Image.asset('dededed')),
-          Text('Ore Ademiniyi', style: ConstantTheme().bigBlueStyle),
-          Text('contact @ oreademiniyi.com',
-              style: ConstantTheme().defaultStyle),
+              child: Image.asset('assets/images/Account Owner.png')),
+          Text(
+              "${widget.userInfo.info.firstName} ${widget.userInfo.info.lastName}",
+              style: ConstantTheme().bigBlueStyle),
+          Text(widget.userInfo.info.email, style: ConstantTheme().defaultStyle),
           const SizedBox(
             height: 30,
           ),
           InkWell(
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (BuildContext context) => const Profile()),
-              );
+              Navigator.pushNamed(context, '/user/profile',
+                  arguments: {'info': widget.userInfo});
             },
             child: MoreCard(
               text: 'Update Profile',

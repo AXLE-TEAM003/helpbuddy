@@ -1,9 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+/* import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:helpbuddy/user/chat/models/firebase_helper.dart';
 import 'package:helpbuddy/user/chat/models/user_model.dart';
-import 'package:helpbuddy/user/chat/screens/chat_room.dart';
 import 'package:helpbuddy/user/chat/screens/search_screen.dart';
 import 'package:helpbuddy/user/chat/util/snackbar.dart';
 import 'package:helpbuddy/user/state/user_state.dart';
@@ -196,3 +195,4 @@ class _UserChatListState extends State<UserChatList> {
     );
   }
 }
+ */

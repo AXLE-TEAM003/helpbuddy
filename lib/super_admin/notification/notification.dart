@@ -37,7 +37,22 @@ class _SuperAdminNotificationState extends State<SuperAdminNotification> {
               onTap: () {
                 bottomModal(context);
               },
-              child: RequestCard())
+              child: RequestCard()),
+          InkWell(
+              onTap: () {
+                bottomModal(context);
+              },
+              child: RequestCard()),
+          InkWell(
+              onTap: () {
+                bottomModal(context);
+              },
+              child: RequestCard()),
+          InkWell(
+              onTap: () {
+                bottomModal(context);
+              },
+              child: RequestCard()),
         ],
       ),
     );
@@ -164,7 +179,7 @@ class RequestCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(right: 20, top: 5, bottom: 5),
+      padding: const EdgeInsets.only(right: 20, top: 8, bottom: 8),
       child: SizedBox(
         height: 90,
         child: Row(
@@ -173,7 +188,8 @@ class RequestCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Container(width: 2.5, height: 90, color: const Color(0xff0D3E73)),
+                Container(
+                    width: 2.5, height: 90, color: const Color(0xff0D3E73)),
                 const SizedBox(width: 10),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -185,11 +201,6 @@ class RequestCard extends StatelessWidget {
                           height: 30,
                           width: 30,
                         ),
-                        Text('Request History',
-                            style: GoogleFonts.urbanist(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 16,
-                                color: Colors.black)),
                         const SizedBox(
                           width: 10,
                         ),
@@ -200,33 +211,22 @@ class RequestCard extends StatelessWidget {
                     const SizedBox(
                       height: 10,
                     ),
-                    Text('Request History',
+                    Text('We have 85 new messages today',
                         style: GoogleFonts.urbanist(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 12,
-                            color: const Color(0xff686868))),
+                            fontWeight: FontWeight.w700,
+                            fontSize: 18,
+                            color: Color.fromARGB(255, 71, 71, 71))),
                     const SizedBox(
                       height: 10,
                     ),
                     Text('05, Jan 2023, 9:08AM',
                         style: GoogleFonts.urbanist(
                             fontWeight: FontWeight.w600,
-                            fontSize: 10,
+                            fontSize: 11,
                             color: const Color(0xff686868))),
                   ],
                 )
               ],
-            ),
-            Container(
-              decoration: const BoxDecoration(color: Color(0xffD9FFEF)),
-              child: Padding(
-                padding: const EdgeInsets.all(5.0),
-                child: Text('View Message',
-                    style: GoogleFonts.urbanist(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14,
-                        color: const Color(0xff006C3F))),
-              ),
             ),
           ],
         ),

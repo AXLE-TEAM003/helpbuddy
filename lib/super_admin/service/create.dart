@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+/* import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirestoreService {
   CollectionReference users = FirebaseFirestore.instance.collection('users');
@@ -15,3 +15,4 @@ class FirestoreService {
   //       .catchError((error) => debugPrint("Failed to add user: $error"));
   // }
 }
+ */

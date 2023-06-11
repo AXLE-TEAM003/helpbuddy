@@ -15,10 +15,15 @@ class _TransactionStatState extends State<TransactionStat> {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
-          leading: const Icon(
-            Icons.arrow_back_ios,
-            color: Colors.black,
-            size: 16,
+          leading: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: const Icon(
+              Icons.arrow_back_ios,
+              color: Colors.black,
+              size: 16,
+            ),
           ),
           title: Text('Transaction Stats',
               style: GoogleFonts.urbanist(

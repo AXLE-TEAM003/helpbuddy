@@ -1,62 +1,49 @@
 import 'package:expandable/expandable.dart';
-import 'package:flutter/cupertino.dart';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:helpbuddy/user/project/project_function.dart';
-
-import 'package:helpbuddy/user/state/user_state.dart';
 import 'package:helpbuddy/utils/constant/theme.dart';
 import 'package:helpbuddy/widget/button.dart';
 import 'package:helpbuddy/widget/input/outlineInput.dart';
-import 'package:helpbuddy/widget/loading.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import '../../api_client/api_client.dart';
+import '../../utils/toasts.dart';
 
-import 'package:provider/provider.dart';
-
-class Project extends StatefulWidget {
-  const Project({Key? key}) : super(key: key);
+class UserProject extends StatefulWidget {
+  const UserProject({Key? key, required this.token}) : super(key: key);
+  final String token;
 
   @override
-  State<Project> createState() => _ProjectState();
+  State<UserProject> createState() => _UserProjectState();
 }
 
-class _ProjectState extends State<Project> {
-  ExpandableController? controller;
-  TextEditingController? nameController;
-  TextEditingController? projectTitleController;
-  TextEditingController? departmentController;
-  TextEditingController? categoryController;
-  TextEditingController? serviceController;
-  TextEditingController? budgetController;
-  TextEditingController? deliveryController;
-  TextEditingController? deliveryTimeController;
-
-  TimeOfDay? selectedTime;
-  DateTime _selectedDateTime = DateTime.now();
+class _UserProjectState extends State<UserProject> {
+  late ExpandableController controller;
+  late TextEditingController titleController;
+  late TextEditingController departmentController;
+  late TextEditingController categoryController;
+  late TextEditingController budgetController;
+  late TextEditingController serviceController;
+  late TextEditingController deliveryTimeController;
 
   @override
   void initState() {
-    nameController = TextEditingController();
-    projectTitleController = TextEditingController();
+    super.initState();
+    titleController = TextEditingController();
     departmentController = TextEditingController();
     categoryController = TextEditingController();
     serviceController = TextEditingController();
     budgetController = TextEditingController();
-    deliveryController = TextEditingController();
-
-    // TODO: implement initState
-    super.initState();
+    deliveryTimeController = TextEditingController();
   }
 
   @override
   void dispose() {
-    nameController?.dispose();
+    super.dispose();
+    titleController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    UserState state = Provider.of<UserState>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -71,7 +58,7 @@ class _ProjectState extends State<Project> {
             size: 16,
           ),
         ),
-        title: Text('Create New Admin',
+        title: Text('Create Project',
             style: GoogleFonts.urbanist(
                 fontWeight: FontWeight.w700,
                 fontSize: 14,
@@ -97,17 +84,16 @@ class _ProjectState extends State<Project> {
                   ],
                 ),
               ),
-              cardDetails('Name', Icons.person_outline, nameController!),
+              /* cardDetails('Name', Icons.person_outline, nameController!),
               const SizedBox(
                 height: 10,
-              ),
-              cardDetails('Title of project ', Icons.edit_document,
-                  projectTitleController!),
+              ), */
+              cardDetails('Title of project ', Icons.edit, titleController),
               const SizedBox(
                 height: 10,
               ),
               cardDetails('Department ', MdiIcons.accountGroupOutline,
-                  departmentController!),
+                  departmentController),
               const SizedBox(
                 height: 30,
               ),
@@ -127,15 +113,15 @@ class _ProjectState extends State<Project> {
               const SizedBox(
                 height: 10,
               ),
-              cardDetails2('Category', categoryController!, () {}),
+              cardDetails2('Category', categoryController),
               const SizedBox(
                 height: 30,
               ),
-              cardDetails2('Budget', budgetController!, () {}),
+              cardDetails2('Budget', budgetController),
               const SizedBox(
                 height: 30,
               ),
-              cardDetails2('Service Type', serviceController!, () {}),
+              cardDetails2('Service Type', serviceController),
               const SizedBox(
                 height: 30,
               ),
@@ -159,9 +145,7 @@ class _ProjectState extends State<Project> {
                 children: [
                   Expanded(
                     child:
-                        cardDetails2('Delivery Date', deliveryController!, () {
-                      _showDateTimePicker(context);
-                    }),
+                        cardDetails2('Delivery Date', deliveryTimeController),
                   ),
                 ],
               ),
@@ -171,26 +155,32 @@ class _ProjectState extends State<Project> {
               Button(
                 text: 'Continue',
                 onTap: () {
-                  UserState userState =
-                      Provider.of<UserState>(context, listen: false);
-                  Loading().showLoadingDialog(context);
-
-                  Map<String, Object?> data = {
-                    'name': nameController!.text,
-                    'projectTitle': projectTitleController!.text,
-                    'department': departmentController!.text,
-                    'category': categoryController!.text,
-                    'serviceType': serviceController!.text,
-                    'deliveryTime': 'hbhbh',
-                    'taken': false,
-                    'projectOwnerId': userState.userDetails!.userId,
-                    'uploadedAt': DateTime.now(),
-                    'adminId': '',
-                    'budget': budgetController!.text,
-                    'deliveryTime': deliveryController!.text,
-                  };
-
-                  ProjectFunctions().createPost(data);
+                  setState(() {});
+                  createProject(
+                          titleController.text,
+                          departmentController.text,
+                          categoryController.text,
+                          serviceController.text,
+                          budgetController.text,
+                          deliveryTimeController.text,
+                          widget.token)
+                      .then((response) {
+                    if (response is num) {
+                      showSnackBar(context,
+                          "Something happened. Try again later [$response]");
+                    } else {
+                      if (response['title'] != null &&
+                          response['title'].isNotEmpty) {
+                        showSuccessSnackBar(
+                            context, "Project successfully created");
+                        Future.delayed(const Duration(seconds: 2), () {
+                          Navigator.pop(context);
+                        });
+                      } else {
+                        showSnackBar(context, "Something happened. Try again.");
+                      }
+                    }
+                  });
                 },
               )
             ],
@@ -198,67 +188,6 @@ class _ProjectState extends State<Project> {
         ),
       ),
     );
-  }
-
-  Future<DateTime?> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2015, 8),
-      lastDate: DateTime(2101),
-    );
-    if (picked != null) {
-      setState(() {
-        deliveryController!.text = picked.toString();
-      });
-    }
-
-    return picked;
-  }
-
-  void _showDateTimePicker(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext builder) {
-        return SizedBox(
-          height: MediaQuery.of(context).copyWith().size.height / 3,
-          child: CupertinoDatePicker(
-            initialDateTime: _selectedDateTime,
-            onDateTimeChanged: (DateTime newDateTime) {
-              setState(() {
-                _selectedDateTime = newDateTime;
-                deliveryController!.text = _selectedDateTime.toString();
-              });
-            },
-            use24hFormat: true,
-            minimumYear: 2022,
-            maximumYear: 2025,
-            minuteInterval: 1,
-            mode: CupertinoDatePickerMode.dateAndTime,
-          ),
-        );
-      },
-    );
-  }
-
-  Future<void> _selectTime(BuildContext context) async {
-    final TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: selectedTime!,
-    );
-    if (picked != null) {
-      setState(() {
-        selectedTime = picked;
-        deliveryTimeController!.text = selectedTime.toString();
-        // _hour = selectedTime.hour.toString();
-        // _minute = selectedTime.minute.toString();
-        // _time = _hour + ' : ' + _minute;
-        // _timeController.text = _time;
-        // _timeController.text = formatDate(
-        //     DateTime(2019, 08, 1, selectedTime.hour, selectedTime.minute),
-        //     [hh, ':', nn, " ", am]).toString();
-      });
-    }
   }
 
   Widget cardDetails(
@@ -285,12 +214,8 @@ class _ProjectState extends State<Project> {
     );
   }
 
-  Widget cardDetails2(
-      String first, TextEditingController controller, VoidCallback ontap) {
+  Widget cardDetails2(String first, TextEditingController controller) {
     return InkWell(
-      onTap: () {
-        ontap;
-      },
       child: ExpansionTile(
         textColor: Colors.grey,
         title: Row(
@@ -307,4 +232,20 @@ class _ProjectState extends State<Project> {
       ),
     );
   }
+}
+
+createProject(String title, String department, String category, String service,
+    String budget, String deliveryTime, String token) {
+  final response = ApiClient(
+          authToken:
+             token)
+      .post('create-project', {
+    "title": title,
+    "department": department,
+    "category": category,
+    "budget": service,
+    "service_type": budget,
+    "delivery_date": deliveryTime,
+  });
+  return response;
 }

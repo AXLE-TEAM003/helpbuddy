@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:helpbuddy/authentication/login.dart';
-
+import 'package:helpbuddy/constants/dimensions.dart';
 
 class Splashscreen extends StatefulWidget {
   const Splashscreen({Key? key}) : super(key: key);
@@ -13,25 +12,33 @@ class _SplashscreenState extends State<Splashscreen> {
   @override
   void initState() {
     Future.delayed(const Duration(seconds: 1), () {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (BuildContext context) => const Login ()));
+      Navigator.pushReplacementNamed(context, '/onboarding');
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Container(
-        color: Colors.white,
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        child: Center(
-            child: Image.asset(
-          'assets/images/Twgo 1.png',
-          height: 300,
-          width: 300,
-        )),
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
+    // !!! Very important for widget responsiveness . . .
+    factor = ((screenWidth / refWidth) + (screenHeight / refHeight)) / 2;
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Container(
+          color: Colors.white,
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          child: Center(
+              child: Image.asset(
+            'assets/images/Twgo 1.png',
+            height: 300 * factor,
+            width: 300 * factor,
+          )),
+        ),
       ),
     );
   }

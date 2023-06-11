@@ -1,4 +1,4 @@
-import 'dart:convert';
+/* import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -7,7 +7,7 @@ import 'package:helpbuddy/utils/constant/theme.dart';
 import 'package:helpbuddy/widget/button.dart';
 import 'package:helpbuddy/widget/input/outlineInput.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:animated_custom_dropdown/custom_dropdown.dart';
+// import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:http/http.dart' as http;
 
 class Payment extends StatefulWidget {
@@ -132,7 +132,7 @@ class _PaymentState extends State<Payment> {
         children: bankList!.isEmpty
             ? []
             : [
-                SizedBox(
+                /* SizedBox(
                   height: 60,
                   child: Expanded(
                     child: CustomDropdown.searchRequest(
@@ -147,7 +147,7 @@ class _PaymentState extends State<Payment> {
                       controller: jobRoleCtrl,
                     ),
                   ),
-                ),
+                ), */
                 const SizedBox(
                   height: 20,
                 ),
@@ -360,3 +360,4 @@ class RequestCard extends StatelessWidget {
     );
   }
 }
+ */

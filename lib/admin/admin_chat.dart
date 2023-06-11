@@ -1,11 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+/* import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:helpbuddy/authentication/login.dart';
+import 'package:helpbuddy/admin/chat/screens/chat_room.dart';
+import 'package:helpbuddy/authentication/logins/admin_login.dart';
 import 'package:helpbuddy/user/chat/models/chat_room_model.dart';
 import 'package:helpbuddy/user/chat/models/firebase_helper.dart';
 import 'package:helpbuddy/user/chat/models/user_model.dart';
-import 'package:helpbuddy/user/chat/screens/chat_room.dart';
 import 'package:helpbuddy/user/chat/screens/search_screen.dart';
 import 'package:helpbuddy/user/chat/util/snackbar.dart';
 import 'package:helpbuddy/user/state/user_state.dart';
@@ -63,7 +63,7 @@ class _AdminChatListState extends State<AdminChatList> {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (BuildContext context) => const Login(),
+                    builder: (BuildContext context) => const AdminLogin(),
                   ),
                 );
                 // ignore: use_build_context_synchronously
@@ -195,3 +195,4 @@ class _AdminChatListState extends State<AdminChatList> {
     );
   }
 }
+ */

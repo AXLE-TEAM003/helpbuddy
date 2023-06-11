@@ -17,10 +17,15 @@ class _MessageStatState extends State<MessageStat> {
           shadowColor: const Color.fromARGB(255, 209, 209, 243),
           elevation: 7,
           backgroundColor: Colors.white,
-          leading: const Icon(
-            Icons.arrow_back_ios,
-            color: Colors.black,
-            size: 16,
+          leading: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: const Icon(
+              Icons.arrow_back_ios,
+              color: Colors.black,
+              size: 16,
+            ),
           ),
           title: Text('Message Stats',
               style: GoogleFonts.urbanist(
