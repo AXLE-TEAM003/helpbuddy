@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:helpbuddy/admin/chat/screens/chat_room.dart';
@@ -20,22 +22,40 @@ class _AdminMessagesState extends State<AdminMessages> {
   List<Conversation> conversations = [];
   bool isLoading = true;
 
-  @override
-  void initState() {
-    super.initState();
+  Timer? timer;
+
+  void refreshMessages() {
     getConversations(widget.token).then((response) {
-      setState(() {
-        conversations =
-            response.map((json) => Conversation.fromJson(json)).toList();
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          conversations =
+              response.map((json) => Conversation.fromJson(json)).toList();
+          isLoading = false;
+        });
+      }
     }).catchError((error) {
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
       // Handle the error here, e.g., show an error message
       print('Error fetching projects: $error');
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    refreshMessages(); // Call the method immediately
+    timer = Timer.periodic(
+        const Duration(seconds: 5), (Timer t) => refreshMessages());
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel(); // Cancel the timer
+    super.dispose();
   }
 
   @override
@@ -122,7 +142,7 @@ class _AdminMessagesState extends State<AdminMessages> {
                             uid: widget.uid,
                             conversationId: conversations[index].id,
                             token: widget.token,
-                            latest: conversations[index].latest.content,
+                            latest: conversations[index].latest?.content,
                             unread: conversations[index].unread,
                           );
                         },

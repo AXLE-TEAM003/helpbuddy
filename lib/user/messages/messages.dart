@@ -26,15 +26,20 @@ class _UserMessagesState extends State<UserMessages> {
 
   void refreshMessages() {
     getConversations(widget.token).then((response) {
-      setState(() {
-        conversations =
-            response.map((json) => Conversation.fromJson(json)).toList();
-        isLoading = false;
-      });
+      print(response);
+      if (mounted) {
+        setState(() {
+          conversations =
+              response.map((json) => Conversation.fromJson(json)).toList();
+          isLoading = false;
+        });
+      }
     }).catchError((error) {
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
       // Handle the error here, e.g., show an error message
       print('Error fetching projects: $error');
     });
@@ -139,7 +144,7 @@ class _UserMessagesState extends State<UserMessages> {
                             uid: widget.uid,
                             conversationId: conversations[index].id,
                             token: widget.token,
-                            latest: conversations[index].latest.content,
+                            latest: conversations[index].latest?.content,
                             unread: conversations[index].unread,
                           );
                         },

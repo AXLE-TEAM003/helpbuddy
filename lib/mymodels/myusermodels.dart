@@ -161,7 +161,7 @@ class Conversation {
   final DateTime createdAt;
   final List<Participant> participants;
   final String title;
-  final LatestMessage latest;
+  final LatestMessage? latest;
   final int unread;
 
   Conversation(
@@ -179,7 +179,9 @@ class Conversation {
       participants: List<Participant>.from(json['participants']
           .map((participant) => Participant.fromJson(participant))),
       title: json['title'],
-      latest: LatestMessage.fromJson(json['latest_message']),
+      latest: json['latest_message'] == null
+          ? null
+          : LatestMessage.fromJson(json['latest_message']),
       unread: json['unread_messages_count'],
     );
   }
